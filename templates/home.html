@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPath - AI-Powered Career Path Generator</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- AOS Library for Scroll Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.5);
+            --secondary: #ec4899;
+            --dark: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: #f8fafc;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, .nav-brand {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(99, 102, 241, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.8) !important;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-nav.scrolled {
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: rgba(15, 23, 42, 0.95) !important;
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #818cf8, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Buttons */
+        .btn-custom {
+            border-radius: 999px;
+            padding: 0.85rem 2.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background-size: 150% auto;
+            border: none;
+            color: white;
+            box-shadow: 0 4px 15px var(--primary-glow);
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 25px var(--primary-glow);
+            color: white;
+        }
+
+        .btn-outline-custom {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-outline-custom:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding-top: 180px;
+            padding-bottom: 120px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        /* Floating Icons Background */
+        .floating-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .float-icon {
+            position: absolute;
+            opacity: 0.1;
+            color: white;
+            animation: float-icon-anim linear infinite;
+        }
+
+        .icon-1 { top: 15%; left: 8%; animation-duration: 24s; font-size: 4.5rem; color: #3b82f6; }
+        .icon-2 { top: 65%; left: 88%; animation-duration: 28s; font-size: 3.5rem; color: #eab308; }
+        .icon-3 { top: 75%; left: 12%; animation-duration: 22s; font-size: 5.5rem; color: #ec4899; }
+        .icon-4 { top: 25%; left: 85%; animation-duration: 19s; font-size: 4rem; color: #10b981; }
+        .icon-5 { top: 40%; left: 45%; animation-duration: 35s; font-size: 7rem; opacity: 0.03; color: white; }
+
+        @keyframes float-icon-anim {
+            0% { transform: translateY(0) rotate(0deg) scale(1); }
+            33% { transform: translateY(-30px) rotate(15deg) scale(1.1); }
+            66% { transform: translateY(20px) rotate(-15deg) scale(0.9); }
+            100% { transform: translateY(0) rotate(0deg) scale(1); }
+        }
+
+        /* Background glow blobs */
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: #4f46e5; }
+        .blob-2 { bottom: -20%; right: -10%; width: 600px; height: 600px; background: #db2777; }
+        .blob-3 { top: 40%; left: 30%; width: 400px; height: 400px; background: #2563eb; opacity: 0.2; }
+
+        /* Text Carousel */
+        .carousel-text {
+            color: #f472b6;
+            margin-right: 8px;
+            font-weight: 500;
+        }
+
+        .carousel-container {
+            height: clamp(30px, 4vw, 40px);
+            overflow: hidden;
+            display: inline-block;
+            vertical-align: bottom;
+            text-align: left;
+            position: relative;
+            min-width: 320px;
+        }
+
+        .carousel-inner-text {
+            animation: slideUpText 10s infinite cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .carousel-inner-text > div {
+            height: clamp(30px, 4vw, 40px);
+            line-height: clamp(30px, 4vw, 40px);
+            white-space: nowrap;
+        }
+
+        @keyframes slideUpText {
+            0%, 20% { transform: translateY(0); }
+            25%, 45% { transform: translateY(-100%); }
+            50%, 70% { transform: translateY(-200%); }
+            75%, 95% { transform: translateY(-300%); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Pulsing Preview Card */
+        .preview-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 1.5rem;
+            animation: float-card 6s ease-in-out infinite;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99, 102, 241, 0.2);
+        }
+        
+        @keyframes float-card {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .progress-bar-custom {
+            background: linear-gradient(90deg, #818cf8, #f472b6);
+            border-radius: 999px;
+            height: 8px;
+            box-shadow: 0 0 10px rgba(244, 114, 182, 0.5);
+            position: relative;
+        }
+
+        .progress-bg {
+            background: rgba(255,255,255,0.1);
+            border-radius: 999px;
+            height: 8px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        /* Steps Section */
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+            color: #f472b6;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .glow-hover:hover .step-icon {
+            box-shadow: 0 0 30px rgba(244, 114, 182, 0.4);
+            transform: scale(1.1);
+            color: #fff;
+            background: linear-gradient(135deg, #ec4899, #6366f1);
+        }
+
+        /* Features Section */
+        .feature-icon-wrapper {
+            font-size: 2.5rem;
+            background: -webkit-linear-gradient(#818cf8, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        /* Stats */
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+            background: linear-gradient(to bottom right, #ffffff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Trusted By */
+        .trusted-logo {
+            opacity: 0.5;
+            transition: opacity 0.3s ease, filter 0.3s ease;
+            filter: grayscale(100%);
+            height: 40px;
+            margin: 0 2rem;
+        }
+        .trusted-logo:hover {
+            opacity: 1;
+            filter: grayscale(0%);
+        }
+
+        /* Footer */
+        .glass-footer {
+            background: rgba(15, 23, 42, 0.9);
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        }
+        .footer-link {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .footer-link:hover {
+            color: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Elements -->
+    <div class="floating-bg">
+        <i class="fa-brands fa-python float-icon icon-1"></i>
+        <i class="fa-brands fa-js float-icon icon-2"></i>
+        <i class="fa-solid fa-database float-icon icon-3"></i>
+        <i class="fa-brands fa-aws float-icon icon-4"></i>
+        <i class="fa-solid fa-code-branch float-icon icon-5"></i>
+    </div>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top glass-nav py-3" id="navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url_for('home') }}">
+                <div class="bg-gradient rounded p-2" style="background: linear-gradient(45deg, #6366f1, #ec4899);">
+                    <i class="fa-solid fa-compass text-white fs-5"></i>
+                </div>
+                <span class="fs-4 tracking-tight">JobPath <span class="fw-light opacity-75">AI</span></span>
+            </a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light fw-medium px-3" href="{{ url_for('dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light opacity-75 px-3" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light fw-medium px-3" href="{{ url_for('login') }}">Sign In</a>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-primary-custom px-4 py-2 text-sm fs-6" href="{{ url_for('register') }}">Create Profile</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center text-lg-start d-flex align-items-center">
+        <div class="container position-relative z-1">
+            <div class="row align-items-center">
+                <!-- Text Content -->
+                <div class="col-lg-6 mb-5 mb-lg-0 pe-lg-5" data-aos="fade-right" data-aos-duration="1000">
+                    <div class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill mb-4" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                        <span class="badge bg-primary rounded-pill">New</span>
+                        <span class="text-light text-opacity-75 fs-6 fw-medium">JobPath V2 Engine Live</span>
+                    </div>
+                    
+                    <h1 class="hero-title text-white">
+                        AI-Powered Career <br>
+                        <span class="text-gradient">Path Generator</span>
+                    </h1>
+                    
+                    <p class="lead text-light text-opacity-75 mb-4 fs-5" style="max-width: 600px; margin: 0 auto;">
+                        Discover your perfect tech career. JobPath analyzes your skills using ML and builds your personalized roadmap out of the dark.
+                    </p>
+                    
+                    <!-- Dynamic thought carousel -->
+                    <div class="fs-4 mb-5 d-flex align-items-center justify-content-center justify-content-lg-start bg-dark bg-opacity-25 p-3 rounded-4 border border-secondary border-opacity-25" style="width: fit-content; margin: 0 auto 0 0;">
+                        <span class="carousel-text me-2"><i class="fa-solid fa-bolt text-warning"></i> Outcome: </span>
+                        <div class="carousel-container">
+                            <div class="carousel-inner-text text-white fw-bold">
+                                <div>From Python to Pro</div>
+                                <div>Bridge the Skill Gap</div>
+                                <div>Your Dream Job Awaits</div>
+                                <div>AI-Powered Recommendations</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                        <a href="{{ url_for('register') }}" class="btn btn-primary-custom btn-lg">
+                            Create Free Profile <i class="fa-solid fa-arrow-right ms-2"></i>
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-custom btn-lg">
+                            Sign In
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Visual Content / Preview Card -->
+                <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
+                    <div class="preview-card p-4 p-md-5 mx-auto" style="max-width: 480px;">
+                        <div class="d-flex align-items-center justify-content-between border-bottom border-light border-opacity-10 pb-3 mb-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="bg-gradient rounded-circle d-flex align-items-center justify-content-center border border-white border-opacity-25 shadow" style="width: 56px; height: 56px; background: linear-gradient(135deg, #3b82f6, #8b5cf6);">
+                                    <i class="fa-solid fa-user-astronaut text-white fs-4"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-0 fw-bold text-white tracking-wide">Alex Developer</h5>
+                                    <span class="text-info text-opacity-75 fs-6 fw-medium"><i class="fa-solid fa-bullseye me-1"></i> Target: ML Engineer</span>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="fs-3 fw-bold text-gradient">78%</div>
+                                <div class="text-light text-opacity-50" style="font-size: 0.7rem; text-transform: uppercase;">Match Score</div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-light text-opacity-50 tracking-wider mb-3" style="font-size: 0.8rem;">Current Arsenal</h6>
+                            
+                            <!-- Skill 1 -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-light fw-medium"><i class="fa-brands fa-python text-warning me-2"></i>Python</span>
+                                    <span class="text-white fw-bold">9/10</span>
+                                </div>
+                                <div class="progress-bg">
+                                    <div class="progress-bar-custom" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                            <!-- Skill 2 -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-light fw-medium"><i class="fa-solid fa-square-root-variable text-info me-2"></i>Math</span>
+                                    <span class="text-white fw-bold">6/10</span>
+                                </div>
+                                <div class="progress-bg">
+                                    <div class="progress-bar-custom" style="width: 60%; background: linear-gradient(90deg, #38bdf8, #818cf8);"></div>
+                                </div>
+                            </div>
+                            <!-- Skill 3 -->
+                            <div class="mb-0">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="text-light fw-medium"><i class="fa-solid fa-network-wired text-success me-2"></i>Algorithms</span>
+                                    <span class="text-white fw-bold">4/10</span>
+                                </div>
+                                <div class="progress-bg">
+                                    <div class="progress-bar-custom" style="width: 40%; background: linear-gradient(90deg, #4ade80, #38bdf8);"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 mt-4 rounded-3" style="background: rgba(99, 102, 241, 0.1); border: 1px dashed rgba(99, 102, 241, 0.3);">
+                            <div class="d-flex gap-3 align-items-start">
+                                <i class="fa-solid fa-robot text-primary mt-1 fs-5"></i>
+                                <div>
+                                    <h6 class="fw-bold text-white mb-1">AI Suggestion</h6>
+                                    <p class="text-light text-opacity-75 mb-0 fs-6" style="line-height: 1.4;">Excellent Python base! To bridge the 22% gap, focus heavily on traversal algorithms and advanced statistics.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By Section -->
+    <section class="py-4 border-top border-bottom border-light border-opacity-10 bg-dark bg-opacity-25 relative z-1">
+        <div class="container text-center">
+            <p class="text-uppercase text-light text-opacity-50 tracking-widest fw-semibold mb-4" style="font-size: 0.85rem; letter-spacing: 2px;">Powering careers inspired by standards from</p>
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 gap-md-5">
+                <i class="fa-brands fa-google fs-2 text-white opacity-50"></i>
+                <i class="fa-brands fa-meta fs-2 text-white opacity-50"></i>
+                <i class="fa-brands fa-aws fs-2 text-white opacity-50"></i>
+                <i class="fa-brands fa-microsoft fs-2 text-white opacity-50"></i>
+                <i class="fa-brands fa-apple fs-2 text-white opacity-50"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-5 my-5 position-relative z-1">
+        <div class="container">
+            <div class="text-center mb-5 pb-3" data-aos="fade-up">
+                <h2 class="display-5 fw-bold text-white mb-3">How JobPath Works</h2>
+                <p class="lead text-light text-opacity-75 mx-auto" style="max-width: 600px;">Three simple steps to unlock your customized technology career mapping.</p>
+            </div>
+
+            <div class="row g-4 position-relative">
+                <!-- Connecting Line for Desktop -->
+                <div class="d-none d-lg-block position-absolute" style="top: 40px; left: 15%; right: 15%; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); z-index: -1;"></div>
+
+                <div class="col-lg-4 text-center glow-hover" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-icon">
+                        📝
+                    </div>
+                    <h4 class="text-white fw-bold mb-3">Add Your Skills</h4>
+                    <p class="text-light text-opacity-75">Tell our engine what technologies, languages, and frameworks you already know, and your proficiency.</p>
+                </div>
+
+                <div class="col-lg-4 text-center glow-hover" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-icon">
+                        🎯
+                    </div>
+                    <h4 class="text-white fw-bold mb-3">Choose Your Target</h4>
+                    <p class="text-light text-opacity-75">Select your absolute dream job role from our industry-regulated list of technical positions.</p>
+                </div>
+
+                <div class="col-lg-4 text-center glow-hover" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-icon">
+                        🤖
+                    </div>
+                    <h4 class="text-white fw-bold mb-3">Get AI Insights</h4>
+                    <p class="text-light text-opacity-75">Our Machine Learning models crunch the data and output a step-by-step roadmap tailored specifically for you.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5 position-relative z-1">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-6 mb-4 mb-lg-0" data-aos="fade-right">
+                    <h2 class="display-5 fw-bold text-white mb-3">Supercharge your learning journey</h2>
+                    <p class="lead text-light text-opacity-75">Don't guess what to learn next. Rely on data, industry statistics, and artificial intelligence to navigate the modern tech stack efficiently.</p>
+                </div>
+                <div class="col-lg-6 text-lg-end" data-aos="fade-left">
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-custom btn-lg">Explore Dashboard Features</a>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="glass-card p-4 h-100 text-center">
+                        <div class="feature-icon-wrapper"><i class="fa-solid fa-brain"></i></div>
+                        <h5 class="text-white fw-bold mb-3">Smart Skill Analysis</h5>
+                        <p class="text-light text-opacity-75 fs-6 mb-0">ML-powered gap detection identifies exactly what you're missing for your target role.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="glass-card p-4 h-100 text-center">
+                        <div class="feature-icon-wrapper"><i class="fa-solid fa-certificate"></i></div>
+                        <h5 class="text-white fw-bold mb-3">Exam Highlights</h5>
+                        <p class="text-light text-opacity-75 fs-6 mb-0">Discover the exact certifications that matter the most for bypassing gatekeepers.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                    <div class="glass-card p-4 h-100 text-center">
+                        <div class="feature-icon-wrapper"><i class="fa-solid fa-map-location-dot"></i></div>
+                        <h5 class="text-white fw-bold mb-3">Career Roadmap</h5>
+                        <p class="text-light text-opacity-75 fs-6 mb-0">Get a definitive, step-by-step chronological learning path built individually for you.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+                    <div class="glass-card p-4 h-100 text-center">
+                        <div class="feature-icon-wrapper"><i class="fa-solid fa-chart-line"></i></div>
+                        <h5 class="text-white fw-bold mb-3">Real-time Progress</h5>
+                        <p class="text-light text-opacity-75 fs-6 mb-0">Watch your dynamic match score grow in real-time as you log newly acquired skills.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stats -->
+    <section class="py-5 my-5 position-relative z-1" data-aos="zoom-in">
+        <div class="container">
+            <div class="glass-card p-5 border-primary border-opacity-25" style="background: rgba(99, 102, 241, 0.05);">
+                <div class="row text-center g-4">
+                    <div class="col-md-4">
+                        <div class="stat-number" id="stat1">0</div>
+                        <div class="text-light text-opacity-75 fw-medium text-uppercase tracking-wider">Career Paths Generated</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-number"><span id="stat2">0</span>%</div>
+                        <div class="text-light text-opacity-75 fw-medium text-uppercase tracking-wider">Match Accuracy</div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-number" id="stat3">0</div>
+                        <div class="text-light text-opacity-75 fw-medium text-uppercase tracking-wider">Active Tech Skills</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-footer pt-5 pb-4 mt-5 position-relative z-1">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <a class="navbar-brand fw-bold d-flex align-items-center gap-2 mb-3" href="#">
+                        <i class="fa-solid fa-compass text-primary fs-3"></i>
+                        <span class="fs-4 text-white">JobPath <span class="fw-light opacity-75">AI</span></span>
+                    </a>
+                    <p class="text-light text-opacity-50 pe-lg-5">Empowering the next generation of engineers and developers with AI-driven clarity and career guidance.</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="text-light text-opacity-50 hover-text-white transition-all fs-5"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="text-light text-opacity-50 hover-text-white transition-all fs-5"><i class="fa-brands fa-github"></i></a>
+                        <a href="#" class="text-light text-opacity-50 hover-text-white transition-all fs-5"><i class="fa-brands fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <h6 class="text-white fw-bold mb-3">Product</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2">
+                        <li><a href="#" class="footer-link">Features</a></li>
+                        <li><a href="#" class="footer-link">Roadmaps</a></li>
+                        <li><a href="#" class="footer-link">Pricing</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-6 mb-4">
+                    <h6 class="text-white fw-bold mb-3">Company</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="#" class="footer-link">Careers</a></li>
+                        <li><a href="#" class="footer-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h6 class="text-white fw-bold mb-3">Stay Updated</h6>
+                    <p class="text-light text-opacity-50 mb-3">Get the latest insights on tech careers and AI model updates.</p>
+                    <form class="d-flex gap-2">
+                        <input type="email" class="form-control bg-dark border-secondary border-opacity-25 text-white" placeholder="Email address" required>
+                        <button type="submit" class="btn btn-primary-custom" style="padding: 0.5rem 1.2rem;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="border-top border-secondary border-opacity-25 pt-4 text-center">
+                <p class="text-light text-opacity-50 mb-0">&copy; 2026 JobPath AI. All rights reserved.</p>
+                <div class="mt-2 text-sm d-flex justify-content-center gap-3">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Smooth Scrolling Animations -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            once: true,
+            offset: 50,
+            duration: 800,
+            easing: 'ease-out-cubic',
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Simple Counter Animation function
+        function animateValue(id, start, end, duration) {
+            if (start === end) return;
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // ease out quad
+                const easeOut = progress * (2 - progress);
+                obj.innerHTML = Math.floor(easeOut * (end - start) + start) + (id === 'stat1' ? '+' : '');
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    obj.innerHTML = end + (id === 'stat1' ? '+' : '');
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Trigger counters when scrolled into view
+        let animated = false;
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !animated) {
+                animated = true;
+                animateValue("stat1", 0, 500, 2000); // 500+
+                animateValue("stat2", 0, 95, 2000);  // 95%
+                animateValue("stat3", 0, 120, 2000); // 120
+            }
+        }, { threshold: 0.5 });
+        
+        const statSection = document.getElementById('stat1');
+        if (statSection) {
+            observer.observe(statSection.parentElement.parentElement);
+        }
+    </script>
+</body>
+</html>

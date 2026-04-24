@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobPath - Skill-Based AI Career Path Generator</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}?v=4">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top glass-nav py-3" id="navbar">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url_for('home') }}">
+                <div class="bg-gradient rounded p-2" style="background: linear-gradient(45deg, #6366f1, #ec4899);">
+                    <i class="fa-solid fa-compass text-white fs-5"></i>
+                </div>
+                <span class="fs-4 tracking-tight text-white m-0" style="font-family: 'Outfit';">JobPath <span class="fw-light opacity-75">AI</span></span>
+            </a>
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light fw-medium px-3" href="{{ url_for('dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light opacity-75 px-3" href="{{ url_for('logout') }}">Logout ({{ current_user.username }})</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link text-light fw-medium px-3" href="{{ url_for('login') }}">Sign In</a>
+                        </li>
+                        <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                            <a class="btn btn-primary px-4 py-2 text-sm fs-6" href="{{ url_for('register') }}">Create Profile</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container fade-in" style="margin-top: 120px; margin-bottom: 80px;">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible bg-dark border-1 border-opacity-25 text-white fade show glass-card shadow-sm mb-4" role="alert" style="border: 1px solid rgba(255,255,255,0.1);">
+                        {{ message }}
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

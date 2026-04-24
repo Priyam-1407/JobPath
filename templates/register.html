@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center min-vh-50 align-items-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="glass-card overflow-hidden">
+            <div class="p-4 text-center border-bottom" style="border-color: rgba(255,255,255,0.05) !important;">
+                <h3 class="card-title mb-0 text-white fw-bold">Create Profile</h3>
+                <p class="text-white text-opacity-75 mb-0 mt-1">Start your AI career journey</p>
+            </div>
+            <div class="p-4 p-md-5">
+                <form method="POST" action="">
+                    <div class="mb-4">
+                        <label for="username" class="form-label text-light opacity-75 fw-semibold">Choose a Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0" style="border-color: rgba(255,255,255,0.1) !important;">
+                                <i class="fa-solid fa-user-astronaut text-light opacity-50"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0 ps-0" id="username" name="username" placeholder="E.g., johndoe123" required autofocus>
+                        </div>
+                    </div>
+                    <div class="mb-5">
+                        <label for="password" class="form-label text-light opacity-75 fw-semibold">Create a Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0" style="border-color: rgba(255,255,255,0.1) !important;">
+                                <i class="fa-solid fa-lock text-light opacity-50"></i>
+                            </span>
+                            <input type="password" class="form-control border-start-0 ps-0" id="password" name="password" placeholder="At least 6 characters" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-lg shadow fw-bold py-3">Register Account</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="mb-0 text-white opacity-75">Already have an account? <a href="{{ url_for('login') }}" class="text-gradient fw-bold text-decoration-none">Sign in</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
