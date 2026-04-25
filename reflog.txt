@@ -1,0 +1,8 @@
+9d4846e HEAD@{0}: pull origin main --rebase (finish): returning to refs/heads/main
+9d4846e HEAD@{1}: pull origin main --rebase (start): checkout 9d4846e79cd5ed9059fc0299b1071432531e986e
+422471d HEAD@{2}: commit: removed venv
+666d6bf HEAD@{3}: commit: cleaned unwanted files
+639bd9c HEAD@{4}: commit: removed venv
+7f3aa62 HEAD@{5}: commit (merge): merge complete
+8739d31 HEAD@{6}: Branch: renamed refs/heads/master to refs/heads/main
+8739d31 HEAD@{8}: commit (initial): initial commit

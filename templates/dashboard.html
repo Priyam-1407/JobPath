@@ -6,46 +6,62 @@
         <div class="glass-card h-100 p-4 p-xl-5">
             <div class="d-flex align-items-center justify-content-between mb-4">
                 <div class="d-flex align-items-center gap-3">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm" style="width: 50px; height: 50px; font-size: 1.5rem; background: linear-gradient(135deg, #6366f1, #ec4899);">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white fw-bold shadow-sm"
+                        style="width: 50px; height: 50px; font-size: 1.5rem; background: linear-gradient(135deg, #6366f1, #ec4899);">
                         {{ current_user.username[0]|upper }}
                     </div>
                     <div>
-                        <h4 class="card-title text-white fw-bold mb-0" style="font-family: 'Outfit';">{{ current_user.username }}</h4>
-                        <span class="badge bg-light bg-opacity-10 text-white border border-light border-opacity-10 mt-1 fw-normal">Career Profile</span>
+                        <h4 class="card-title text-white fw-bold mb-0" style="font-family: 'Outfit';">{{
+                            current_user.username }}</h4>
+                        <span
+                            class="badge bg-light bg-opacity-10 text-white border border-light border-opacity-10 mt-1 fw-normal">Career
+                            Profile</span>
                     </div>
                 </div>
             </div>
 
             <hr class="border-light border-opacity-25 mb-4">
 
-            <h6 class="fw-bold mb-3 text-light text-opacity-50 tracking-wide" style="text-transform: uppercase;">Target Role</h6>
+            <h6 class="fw-bold mb-3 text-light text-opacity-50 tracking-wide" style="text-transform: uppercase;">Target
+                Role</h6>
             <div class="mb-4">
-                <select class="form-select form-select-lg shadow-sm" id="targetRole" style="cursor: pointer; font-size: 1rem;">
+                <select class="form-select form-select-lg shadow-sm" id="targetRole"
+                    style="cursor: pointer; font-size: 1rem;">
                     <option value="" {% if not target_role %}selected{% endif %} disabled>Choose a goal...</option>
                     {% for role in roles %}
-                        <option value="{{ role }}" {% if target_role == role %}selected{% endif %}>{{ role }}</option>
+                    <option value="{{ role }}" {% if target_role==role %}selected{% endif %}>{{ role }}</option>
                     {% endfor %}
                 </select>
-                <div class="form-text mt-2 text-light text-opacity-50"><small>Select the role you want JobPath to analyze your skills against.</small></div>
+                <div class="form-text mt-2 text-light text-opacity-50"><small>Select the role you want JobPath to
+                        analyze your skills against.</small></div>
             </div>
-            
-            <h6 class="fw-bold mb-3 mt-5 text-light text-opacity-50 tracking-wide" style="text-transform: uppercase;">Add a New Skill</h6>
-            <form action="{{ url_for('add_skill') }}" method="POST" class="p-4 rounded-4 shadow-sm" style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1);">
+
+            <h6 class="fw-bold mb-3 mt-5 text-light text-opacity-50 tracking-wide" style="text-transform: uppercase;">
+                Add a New Skill</h6>
+            <form action="{{ url_for('add_skill') }}" method="POST" class="p-4 rounded-4 shadow-sm"
+                style="background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1);">
                 <div class="mb-3">
-                    <input type="text" class="form-control shadow-sm" name="skill_name" placeholder="E.g. Python, Agile..." required>
+                    <input type="text" class="form-control shadow-sm" name="skill_name"
+                        placeholder="E.g. Python, Agile..." required>
                 </div>
                 <div class="mb-4">
                     <div class="d-flex justify-content-between mb-2">
-                        <label class="form-label text-light text-opacity-75 fw-semibold text-sm mb-0 mt-1">Proficiency</label>
-                        <span class="badge bg-primary bg-opacity-25 text-white border border-primary rounded-pill d-flex align-items-center justify-content-center" style="width:32px" id="profBadge">5</span>
+                        <label
+                            class="form-label text-light text-opacity-75 fw-semibold text-sm mb-0 mt-1">Proficiency</label>
+                        <span
+                            class="badge bg-primary bg-opacity-25 text-white border border-primary rounded-pill d-flex align-items-center justify-content-center"
+                            style="width:32px" id="profBadge">5</span>
                     </div>
-                    <input type="range" class="form-range" name="proficiency" min="1" max="10" value="5" oninput="document.getElementById('profBadge').innerText = this.value">
-                    <div class="d-flex justify-content-between text-light text-opacity-50 mt-1" style="font-size: 0.7rem; font-weight: 500;">
+                    <input type="range" class="form-range" name="proficiency" min="1" max="10" value="5"
+                        oninput="document.getElementById('profBadge').innerText = this.value">
+                    <div class="d-flex justify-content-between text-light text-opacity-50 mt-1"
+                        style="font-size: 0.7rem; font-weight: 500;">
                         <span>Novice</span>
                         <span>Expert</span>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary w-100 fw-bold shadow">Add to Profile <i class="fa-solid fa-plus ms-1" style="font-size: 0.8rem;"></i></button>
+                <button type="submit" class="btn btn-primary w-100 fw-bold shadow">Add to Profile <i
+                        class="fa-solid fa-plus ms-1" style="font-size: 0.8rem;"></i></button>
             </form>
         </div>
     </div>
@@ -53,17 +69,22 @@
     <!-- Skills display and chart -->
     <div class="col-lg-8">
         <div class="glass-card h-100 overflow-hidden d-flex flex-column">
-            <div class="p-4 px-xl-5 pb-0 border-bottom border-light border-opacity-10" style="background: rgba(0,0,0,0.1);">
+            <div class="p-4 px-xl-5 pb-0 border-bottom border-light border-opacity-10"
+                style="background: rgba(0,0,0,0.1);">
                 <ul class="nav nav-pills gap-2 mb-3" id="dashboardTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active fw-semibold px-4 py-2" id="list-tab" data-bs-toggle="pill" data-bs-target="#list-view" type="button" role="tab"><i class="fa-solid fa-list-check me-2 opacity-75"></i>Skill Inventory</button>
+                        <button class="nav-link active fw-semibold px-4 py-2" id="list-tab" data-bs-toggle="pill"
+                            data-bs-target="#list-view" type="button" role="tab"><i
+                                class="fa-solid fa-list-check me-2 opacity-75"></i>Skill Inventory</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-semibold px-4 py-2" id="chart-tab" data-bs-toggle="pill" data-bs-target="#chart-view" type="button" role="tab"><i class="fa-solid fa-chart-radar me-2 opacity-75"></i>Radar Analysis</button>
+                        <button class="nav-link fw-semibold px-4 py-2" id="chart-tab" data-bs-toggle="pill"
+                            data-bs-target="#chart-view" type="button" role="tab"><i
+                                class="fa-solid fa-chart-radar me-2 opacity-75"></i>Radar Analysis</button>
                     </li>
                 </ul>
             </div>
-            
+
             <div class="p-4 p-xl-5 flex-grow-1">
                 <div class="tab-content h-100" id="dashboardTabsContent">
                     <div class="tab-pane fade show active h-100" id="list-view" role="tabpanel">
@@ -74,9 +95,10 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="tab-pane fade h-100 d-flex flex-column" id="chart-view" role="tabpanel">
-                        <div class="chart-container flex-grow-1" style="position: relative; min-height:400px; width:100%">
+                        <div class="chart-container flex-grow-1"
+                            style="position: relative; min-height:400px; width:100%">
                             <canvas id="skillsRadarChart"></canvas>
                         </div>
                     </div>
@@ -88,21 +110,29 @@
 
 <div class="row pt-4">
     <div class="col-12">
-        <div class="glass-card position-relative overflow-hidden text-white" style="border: 1px solid rgba(236, 72, 153, 0.3);">
-            <div class="position-absolute rounded-circle" style="background: radial-gradient(circle, rgba(236,72,153,0.4) 0%, rgba(0,0,0,0) 70%); width: 400px; height: 400px; top: -150px; right: -100px; z-index: 0; pointer-events: none;"></div>
-            <div class="position-absolute rounded-circle" style="background: radial-gradient(circle, rgba(99,102,241,0.4) 0%, rgba(0,0,0,0) 70%); width: 400px; height: 400px; bottom: -150px; left: -100px; z-index: 0; pointer-events: none;"></div>
-            
+        <div class="glass-card position-relative overflow-hidden text-white"
+            style="border: 1px solid rgba(236, 72, 153, 0.3);">
+            <div class="position-absolute rounded-circle"
+                style="background: radial-gradient(circle, rgba(236,72,153,0.4) 0%, rgba(0,0,0,0) 70%); width: 400px; height: 400px; top: -150px; right: -100px; z-index: 0; pointer-events: none;">
+            </div>
+            <div class="position-absolute rounded-circle"
+                style="background: radial-gradient(circle, rgba(99,102,241,0.4) 0%, rgba(0,0,0,0) 70%); width: 400px; height: 400px; bottom: -150px; left: -100px; z-index: 0; pointer-events: none;">
+            </div>
+
             <div class="p-5 p-xl-5 text-center position-relative z-1">
-                <div class="mb-4 d-inline-block p-3 rounded-circle" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                <div class="mb-4 d-inline-block p-3 rounded-circle"
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
                     <i class="fa-solid fa-wand-magic-sparkles text-gradient fs-1"></i>
                 </div>
                 <h2 class="fw-bold mb-3 tracking-wide" style="font-family: 'Outfit';">JobPath AI Recommendations</h2>
                 <p class="lead text-white text-opacity-75 mx-auto mb-5" style="max-width: 650px;">
-                    We are analyzing your current profile against thousands of successful industry paths. 
+                    We are analyzing your current profile against thousands of successful industry paths.
                     Based on your inputted skills, here is your customized plan:
                 </p>
-                <div class="p-4 rounded-4 shadow d-inline-block mx-auto text-start w-100" style="max-width: 800px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.2);">
-                    <code class="text-white text-opacity-75 font-monospace p-2 fs-6"># TODO: ML Model output. Generated pathways, suggested courses, and missing skills will fall here...</code>
+                <div class="p-4 rounded-4 shadow d-inline-block mx-auto text-start w-100"
+                    style="max-width: 800px; background: rgba(0,0,0,0.3); border: 1px dashed rgba(255,255,255,0.2);">
+                    <code
+                        class="text-white text-opacity-75 font-monospace p-2 fs-6"># TODO: ML Model output. Generated pathways, suggested courses, and missing skills will fall here...</code>
                 </div>
             </div>
         </div>
